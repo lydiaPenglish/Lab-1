@@ -1,7 +1,7 @@
 ---
 title: "ReadMe"
 author: "Lydia English, Earl Hur, Min Zhang"
-date: "January 28, 2019"
+date: "February 4, 2019"
 output: html_document
 ---
 
@@ -10,3 +10,26 @@ There were many packages that needed to be installed to knit the index.Rmd. The 
 
 #2. Describe one approach on how you tried to solve the problem (and how this did not work)
 Instead of install this package from the CRAN, we installed this package through hadley's github. Using *devtools::install_github("hadley/emo")*, we could successfully install the package.
+
+Another error we have come across is in the Rcpp.Rmd document:
+
+`Line 77 Error in sourceCpp(code = code, env = env, rebuild = rebuild, cacheDir = cacheDir, : Error 1 occured building shared library. Calls: local ... withVisible -> eval -> eval -> cppFunction -> sourceCpp`
+
+If we navigate to line 77 in the Rcpp.Rmd document we find the following script:
+
+```{r add, eval=FALSE}
+cppFunction('int add(int x, int y, int z) {
+  int sum = x + y + z;
+  return sum;
+}')
+# add works like a regular R function
+add
+add(1, 2, 3)
+```
+
+We've tried downloading and updating Rtools and making sure other packages were updated but this was unsuccessful. However another group member was succesfully able to knit the .html file. 
+
+**Weather Stations**
+
+
+
