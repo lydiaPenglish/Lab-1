@@ -5,28 +5,8 @@ date: "January 28, 2019"
 output: html_document
 ---
 
-Github repo url = https://github.com/lydiaPenglish/Lab-1
+#1. Document the error you encounter (be as concise and specific as you can at the same time)
+There were many packages that needed to be installed to knit the index.Rmd. The first problem that we have ran into was that the *emo* package was not available from usual CRAN repository. Another issue came with an error message: *In system(cmd) : 'make' not found*
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
-```
-
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+#2. Describe one approach on how you tried to solve the problem (and how this did not work)
+Instead of install this package from the CRAN, we installed this package through hadley's github. Using *devtools::install_github("hadley/emo")*, we could successfully install the package.
