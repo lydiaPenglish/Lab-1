@@ -31,5 +31,29 @@ We've tried downloading and updating Rtools and making sure other packages were 
 
 **Weather Stations**
 
+```{r}
+library(readr)
+
+?read_fwf()
+col_positions <- readr::fwf_widths(
+  c(2, 1, 2, 6, 9, 10, 8, 2, 30, 8, 8, 7, 2)
+)
+
+weather <- data.frame(readr::read_fwf("ushcn-v2.5-stations.txt", col_positions = col_positions))
+
+names(weather) <- c("Country", "Network", "ID", "COOP", "Latitude", "Longitude", "Elevation", "State", "Name", "Comp1", "Comp2", "Comp3", "DIFF")
+library(ggplot2)
+
+library(maps)
+map_data("county")
+states <- map_data("state")
+a <- data.frame(usa)
+
+ggplot(weather) + geom_polygon(aes(Longitude, Latitude))
+#ggplot() +
+#  geom_polygon(states, aes(x = long, y = lat, group = group), fill="white", color="black") +
+#  geom_point(weather, aes(Longitude, Latitude))
+
+```
 
 
