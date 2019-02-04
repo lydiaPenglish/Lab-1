@@ -33,3 +33,21 @@ We've tried downloading and updating Rtools and making sure other packages were 
 
 
 
+
+```{r}
+# download and unzip .gz in R
+temp <- tempfile()
+download.file("ftp://ftp.ncdc.noaa.gov/pub/data/ushcn/v2.5/ushcn.tavg.latest.raw.tar.gz",temp)
+untar(temp)
+unlink(temp)
+
+# count the number of files in the downloaded and extracted folder
+FileList <- list.files("/Users/min/Documents/ISU/585DataTechHoffman/Lab#1/ushcn.v2.5.5.20190204")
+FileList %>% length()
+
+# Lydia's home town is Providence RI, and it corresponds to USH00376698
+
+
+```
+
+
