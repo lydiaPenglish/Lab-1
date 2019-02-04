@@ -24,6 +24,6 @@ add
 add(1, 2, 3)
 ```
 
-Any idea of what isn't allowing this shared library to be built?
+We've tried downloading and updating Rtools and making sure other packages were updated but this was unsuccessful. However another group member was succesfully able to knit the .html file. 
 
 **Weather Stations**
