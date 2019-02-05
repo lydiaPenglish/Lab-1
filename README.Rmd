@@ -67,6 +67,7 @@ untar(temp)
 unlink(temp)
 
 # count the number of files in the downloaded and extracted folder
+# Question: I only can unzip .gz to a local address. Is this a problem?
 FileList <- list.files("/Users/min/Documents/ISU/585DataTechHoffman/Lab#1/ushcn.v2.5.5.20190204")
 FileList %>% length()
 
