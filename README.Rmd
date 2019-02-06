@@ -1,7 +1,7 @@
 ---
-title: "ReadMe"
+title: "Lab 1"
 author: "Lydia English, Earl Hur, Min Zhang"
-date: "February 4, 2019"
+date: "February 6, 2019"
 output: html_document
 ---
 
@@ -14,17 +14,20 @@ library(maps)
 library(tidyr)
 ```
 
-**1. Document the error you encounter (be as concise and specific as you can at the same time)**
+Here is the link to our github [repo](https://github.com/lydiaPenglish/Lab-1)
 
-There were many packages that needed to be installed to knit the index.Rmd. The first problem that we have ran into was that the *emo* package was not available from usual CRAN repository. Another issue came with an error message: *In system(cmd) : 'make' not found*
+### Building a Book
 
-**2. Describe one approach on how you tried to solve the problem (and how this did not work)**
+**Documenting errors and solution approaches**
 
-Instead of install this package from the CRAN, we installed this package through hadley's github. Using *devtools::install_github("hadley/emo")*, we could successfully install the package.
+1. There were many packages that needed to be installed to knit the index.Rmd. The first problem that we have ran into was that the *emo* package was not available from usual CRAN repository. Another issue came with an error message: *In system(cmd) : 'make' not found* 
+  Instead of installing this package from the CRAN, we installed this package through hadley's github. Using *devtools::install_github("hadley/emo")*, we could successfully install the package.
 
-Another error we have come across is in the Rcpp.Rmd document:
+2. Another error we have come across is in the Rcpp.Rmd document:
 
-`Line 77 Error in sourceCpp(code = code, env = env, rebuild = rebuild, cacheDir = cacheDir, : Error 1 occured building shared library. Calls: local ... withVisible -> eval -> eval -> cppFunction -> sourceCpp`
+`Line 77 Error in sourceCpp(code = code, env = env, rebuild = rebuild,` 
+`cacheDir = cacheDir, : Error 1 occured building shared library. Calls:` 
+`local ... withVisible -> eval -> eval -> cppFunction -> sourceCpp`
 
 If we navigate to line 77 in the Rcpp.Rmd document we find the following script:
 
@@ -40,9 +43,9 @@ add(1, 2, 3)
 
 We've tried downloading and updating Rtools and making sure other packages were updated but this was unsuccessful. However another group member was succesfully able to knit the .html file so this wasn't a problem across all computers. 
 
-The last unsolvable problem occurred in Line 783 in `Conditions.Rmd`. Not sure about the meaning of the error message: `err` inherits from `warning/condition` not `error_bad_argument`. So the chunck of Lines 783-788 was comment out to avoid error message.  
+3. The last unsolvable problem occurred in Line 783 in `Conditions.Rmd`. Not sure about the meaning of the error message: `err` inherits from `warning/condition` not `error_bad_argument`. So the chunk of Lines 783-788 was commented out to avoid error message.  
 
-**Weather Stations**
+###Weather Stations
 
 ```{r}
 
@@ -70,7 +73,7 @@ ggplot(weather) +
 ```
 
 
-**More Weather Data**
+### More Weather Data
 
 ```{r}
 # download and unzip .gz in R
@@ -79,12 +82,9 @@ download.file("ftp://ftp.ncdc.noaa.gov/pub/data/ushcn/v2.5/ushcn.tavg.latest.raw
 untar(temp)
 unlink(temp)
 
-# count the number of files in the downloaded and extracted folder
-# Question: I only can unzip .gz to a local address. Is this a problem?
-# FileList <- list.files("/Users/min/Documents/ISU/585DataTechHoffman/Lab#1/ushcn.v2.5.5.20190204")
-# This worked on my computer - see if it works on yours too?
-# Great change and works well! But the folder name changed from **204 to **205, which is the day of unzipping--interesting!
-FileList <- list.files('./ushcn.v2.5.5.20190205')
+# Count the number of files in the downloaded and extracted folder. 
+# (Note that the last number(s) in the folder name will need to be changed depending on the date the folder was downloaded/unzipped)
+FileList <- list.files('./ushcn.v2.5.5.20190206')
 FileList %>% length()
 
 # Lydia's hometown is Providence RI, and it corresponds to USH00376698
