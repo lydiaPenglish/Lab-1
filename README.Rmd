@@ -1,11 +1,11 @@
 ---
-title: "ReadMe"
+title: "Stat 585 - Lab 1"
 author: "Lydia English, Earl Hur, Min Zhang"
 date: "February 4, 2019"
 output: html_document
 ---
 
-```{r,warning=FALSE,message=FALSE}
+```{r, cache=FALSE, echo=FALSE, warning=FALSE, message=FALSE}
 library(readr)
 library(dplyr)
 library(openintro)
@@ -14,17 +14,18 @@ library(maps)
 library(tidyr)
 ```
 
-**1. Document the error you encounter (be as concise and specific as you can at the same time)**
+##Document the error you encounter
 
 There were many packages that needed to be installed to knit the index.Rmd. The first problem that we have ran into was that the *emo* package was not available from usual CRAN repository. Another issue came with an error message: *In system(cmd) : 'make' not found*
 
-**2. Describe one approach on how you tried to solve the problem (and how this did not work)**
+##Describe one approach on how you tried to solve the problem
 
 Instead of install this package from the CRAN, we installed this package through hadley's github. Using *devtools::install_github("hadley/emo")*, we could successfully install the package.
 
 Another error we have come across is in the Rcpp.Rmd document:
 
-`Line 77 Error in sourceCpp(code = code, env = env, rebuild = rebuild, cacheDir = cacheDir, : Error 1 occured building shared library. Calls: local ... withVisible -> eval -> eval -> cppFunction -> sourceCpp`
+`Line 77 Error in sourceCpp(code = code, env = env, rebuild = rebuild, cacheDir = cacheDir, :`
+`Error 1 occured building shared library. Calls: local ... withVisible -> eval -> eval -> cppFunction -> sourceCpp`
 
 If we navigate to line 77 in the Rcpp.Rmd document we find the following script:
 
@@ -42,9 +43,11 @@ We've tried downloading and updating Rtools and making sure other packages were 
 
 The last unsolvable problem occurred in Line 783 in `Conditions.Rmd`. Not sure about the meaning of the error message: `err` inherits from `warning/condition` not `error_bad_argument`. So the chunck of Lines 783-788 was comment out to avoid error message.  
 
-**Weather Stations**
+##US Weather Stations
 
-```{r}
+**Plotting Weather Stations in the U.S.**
+
+```{r, cache=FALSE, message=FALSE}
 
 col_positions <- readr::fwf_widths(
   c(2, 1, 2, 6, 9, 10, 8, 2, 30, 8, 8, 7, 2)
@@ -54,40 +57,53 @@ weather <- data.frame(readr::read_fwf("ushcn-v2.5-stations.txt", col_positions =
 
 names(weather) <- c("Country", "Network", "ID", "COOP", "Latitude", "Longitude", "Elevation", "State", "Name", "Comp1", "Comp2", "Comp3", "DIFF")
 
+weather$DIFF <- as.factor(weather$DIFF)
+
 states_map <- map_data("state") # data for outlines of US states
 
-# Map with state outlines, weather station locations, their elevation, and timezone
+tzcolor <- c("plum","lightcoral", "khaki", "lightblue") 
+
 weather <- weather %>% 
   mutate(StateFull = tolower(abbr2state(State)))
 
-ggplot(weather) +
-  geom_map(aes(map_id = StateFull, fill = DIFF), map = states_map) +
-  expand_limits(x = states_map$long, y = states_map$lat) +
-  geom_point(aes(Longitude, Latitude, colour = Elevation), cex = 0.4) +
-  scale_colour_gradientn(colours = terrain.colors(10)) +
-  theme_classic()
+states_txt <- data.frame(state.center, state.abb)
+states_txt <- states_txt[-which(states_txt$state.abb %in% c("AK", "HI")), ]
 
+ggplot(weather) +
+  geom_map(aes(map_id = StateFull, fill = DIFF), size=1, color="white", map = states_map) +
+  expand_limits(x = states_map$long, y = states_map$lat) +
+  geom_point(aes(Longitude, Latitude, colour = Elevation), cex = 1.5) +
+  geom_text(data = states_txt, aes(x = x, y = y, label = state.abb), size = 3, fontface = "bold")+
+  labs(x = "", y = "", title = "Weather Station") +
+  scale_colour_gradientn(colours=c("forestgreen","goldenrod","brown2"))+
+  scale_fill_manual("Time Zone", breaks = c(5,6,7,8), values = tzcolor, 
+                    labels = c( "Eastern", "Central", "Mountain", "Pacific"), guide = "legend") +
+  theme(panel.background = element_blank(), 
+        axis.text.x=element_blank(),
+        axis.text.y=element_blank(),
+        line = element_blank())
+  
 ```
 
 
-**More Weather Data**
+## More Weather Data
 
-```{r}
-# download and unzip .gz in R
+**Downliading gz file and making it available from R.**
+```{r, cache=FALSE}
 temp <- tempfile()
 download.file("ftp://ftp.ncdc.noaa.gov/pub/data/ushcn/v2.5/ushcn.tavg.latest.raw.tar.gz",temp)
 untar(temp)
 unlink(temp)
+```
 
-# count the number of files in the downloaded and extracted folder
-# Question: I only can unzip .gz to a local address. Is this a problem?
-# FileList <- list.files("/Users/min/Documents/ISU/585DataTechHoffman/Lab#1/ushcn.v2.5.5.20190204")
-# This worked on my computer - see if it works on yours too?
-# Great change and works well! But the folder name changed from **204 to **205, which is the day of unzipping--interesting!
+**Count the number of files.**
+```{r, cache=FALSE}
 FileList <- list.files('./ushcn.v2.5.5.20190205')
 FileList %>% length()
+```
 
-# Lydia's hometown is Providence RI, and it corresponds to USH00376698
+**Name of the file containing Lydia's hometown.**
+```{r, cache=FALSE}
 weather %>% 
   separate(Name, c('City', 'Other'), sep=" ", extra = "merge", fill = "right")%>% 
   filter(City == "PROVIDENCE", State == "RI") %>% 
@@ -96,4 +112,4 @@ weather %>%
 
 ```
 
-
+Lydia's hometown is Providence RI, and it corresponds to USH00376698.
