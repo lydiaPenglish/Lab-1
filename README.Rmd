@@ -69,8 +69,8 @@ weather <- weather %>%
 states_txt <- data.frame(state.center, state.abb)
 states_txt <- states_txt[-which(states_txt$state.abb %in% c("AK", "HI")), ]
 
-ggplot(weather) +
-  geom_map(aes(map_id = StateFull, fill = DIFF), size=1, color="white", map = states_map) +
+p_weather <- ggplot(weather) +
+  geom_map(aes(map_id = StateFull, fill = DIFF, text = paste("State: ", toupper(StateFull), "<br>Elevation: ", Elevation, "<br>Time Zone: ", DIFF)), size=1, color="white", map = states_map) +
   expand_limits(x = states_map$long, y = states_map$lat) +
   geom_point(aes(Longitude, Latitude, colour = Elevation), cex = 1.5) +
   geom_text(data = states_txt, aes(x = x, y = y, label = state.abb), size = 3, fontface = "bold")+
@@ -82,7 +82,8 @@ ggplot(weather) +
         axis.text.x=element_blank(),
         axis.text.y=element_blank(),
         line = element_blank())
-  
+
+ggplotly(p_weather, , tooltip = "text")  
 ```
 
 
