@@ -52,7 +52,7 @@ We've tried downloading and updating Rtools and making sure other packages were 
 
 **Plotting Weather Stations in the U.S.**
 
-```{r, cache=FALSE, message=FALSE}
+```{r, cache=FALSE, message=FALSE, warning=FALSE}
 col_positions <- readr::fwf_widths(
   c(2, 1, 2, 6, 9, 10, 8, 2, 30, 8, 8, 7, 2)
 )
