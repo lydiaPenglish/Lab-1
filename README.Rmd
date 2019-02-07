@@ -10,8 +10,12 @@ library(readr)
 library(dplyr)
 library(openintro)
 library(ggplot2)
+library(plotly)
 library(maps)
 library(tidyr)
+#library(maptools)
+#library(rgdal)
+#library(rgeos)
 ```
 
 Here is the link to our github [repo](https://github.com/lydiaPenglish/Lab-1)
@@ -49,7 +53,6 @@ We've tried downloading and updating Rtools and making sure other packages were 
 **Plotting Weather Stations in the U.S.**
 
 ```{r, cache=FALSE, message=FALSE}
-
 col_positions <- readr::fwf_widths(
   c(2, 1, 2, 6, 9, 10, 8, 2, 30, 8, 8, 7, 2)
 )
@@ -70,20 +73,30 @@ weather <- weather %>%
 states_txt <- data.frame(state.center, state.abb)
 states_txt <- states_txt[-which(states_txt$state.abb %in% c("AK", "HI")), ]
 
-ggplot(weather) +
-  geom_map(aes(map_id = StateFull, fill = DIFF), size=1, color="white", map = states_map) +
-  expand_limits(x = states_map$long, y = states_map$lat) +
-  geom_point(aes(Longitude, Latitude, colour = Elevation), cex = 1.5) +
-  geom_text(data = states_txt, aes(x = x, y = y, label = state.abb), size = 3, fontface = "bold")+
-  labs(x = "", y = "", title = "Weather Station") +
-  scale_colour_gradientn(colours=c("forestgreen","goldenrod","brown2"))+
-  scale_fill_manual("Time Zone", breaks = c(5,6,7,8), values = tzcolor, 
-                    labels = c( "Eastern", "Central", "Mountain", "Pacific"), guide = "legend") +
-  theme(panel.background = element_blank(), 
-        axis.text.x=element_blank(),
-        axis.text.y=element_blank(),
-        line = element_blank())
+weather$Timezone <- ifelse(weather$DIFF==5, "Eastern",
+                           ifelse(weather$DIFF==6, "Central",
+                                  ifelse(weather$DIFF==7, "Mountain", "Pacific")))
 
+
+
+p_weather <- ggplot(weather) +
+  geom_map(aes(map_id = StateFull, fill = Timezone), size=0.5, color="white", map = states_map) +
+  expand_limits(x = states_map$long, y = states_map$lat) +
+  geom_point(aes(Longitude, Latitude, colour = Elevation, 
+                 text=paste("State: ", toupper(StateFull), 
+                            "<br>Longitude: ", Longitude, 
+                            "<br>Latitude: ", Latitude, 
+                            "<br>Elevation: ", Elevation,
+                            "<br>Time Zone: ", Timezone)), cex = 1.5) +
+  geom_text(data = states_txt, aes(x = x, y = y, label = state.abb), size = 3, fontface = "bold")+
+  labs(x = "Longitude", y = "Latitude", title = "Weather Station") +
+  scale_colour_gradientn(colours=c("forestgreen","goldenrod","brown2"))+
+  scale_fill_manual(name="", values = tzcolor) +
+  theme_light() +
+  theme(legend.position="bottom",
+        legend.box = "vertical")
+
+ggplotly(p_weather, tooltip = "text") %>% layout(legend=list(orientation = "h", y = -0.2))
 ```
 
 
